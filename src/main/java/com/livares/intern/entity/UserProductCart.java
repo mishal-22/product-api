@@ -1,24 +1,23 @@
 package com.livares.intern.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class Users {
+@AllArgsConstructor
+public class UserProductCart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-     int id;
-	String firstName;
-	String lastName;
-     String username;
-     String password;
+  int id;
+  int userId;
+  int productId;
 }
