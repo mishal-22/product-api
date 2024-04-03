@@ -3,49 +3,46 @@ package com.livares.intern.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-//import com.livares.intern.entity.AuthRequest;
-import com.livares.intern.entity.Users;
-import com.livares.intern.service.JwtService;
-import com.livares.intern.service.UsersService;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.livares.intern.DTO.UserDTO;
+import com.livares.intern.entity.Users;
+import com.livares.intern.service.UsersService;
 
 @RestController
 public class UsersController {
 	@Autowired
 	UsersService usersService;
-	
+
 //	@Autowired
 //	private JwtService jwtService;
-	
+
 //	@Autowired
 //	private AuthenticationManager authenticationManager;
-	
-	@PostMapping("/add-user")
-	public String addUser(@RequestBody Users user) {
+
+	@PostMapping("/register")
+	public String addUser(@RequestBody UserDTO user) {
+
 		return usersService.addUser(user);
 	}
-	
+//	@PostMapping("login")
+//	public String loginPage(@RequestParam String userName,@RequestParam String password) {
+//		return usersService.login(userName,password);
+//	}
+
 	@GetMapping("get-all-users")
 	public List<Users> getAllUsers() {
 		return usersService.getAllUsers();
 	}
-	
+
 	@DeleteMapping("delete-user/{id}")
-	public String deleteUser(@PathVariable int id) {
+	public String deleteUser(@PathVariable long id) {
 		return usersService.deleteUser(id);
 	}
 
@@ -55,7 +52,7 @@ public class UsersController {
 //		
 //		return usersService.addAdmin(users) ;
 //	}
-	
+
 //	@GetMapping("user/userProfile")
 //	@PreAuthorize("hasAuthority('ROLE_USER')")
 //	public String userProfile() {
@@ -77,6 +74,5 @@ public class UsersController {
 //			throw new UsernameNotFoundException("Invalid user Request!");
 //		}
 //	}
-	
 
 }
