@@ -16,10 +16,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProductCart {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	long id;
+public class UserProductCart extends BaseEntity {
+	
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")

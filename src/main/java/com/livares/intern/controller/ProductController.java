@@ -30,42 +30,48 @@ public class ProductController {
 
 	@Autowired
 	ProductService productService;
-	
-	
+
 	@PostMapping("/add")
-	public String addProduct(@RequestBody Product product) {
+	public String addProduct(@RequestBody ProductDTO product) {
 		return productService.addProduct(product);
 	}
+
 	@PostMapping("/addItems")
-	public ResponseEntity<String> addMultipleProducts(@RequestBody List<Product> products) {
+	public ResponseEntity<String> addMultipleProducts(@RequestBody List<ProductDTO> products) {
 		return productService.addAllProducts(products);
 	}
+
 	@GetMapping("/getAll")
-	public Page<Product> getAllProduct(@RequestParam(defaultValue = "0") Integer pageNo,@RequestParam(defaultValue = "5") Integer pageSize){
-		return productService.getAllProduct(pageNo,pageSize);
-		
+	public Page<ProductDTO> getAllProduct(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "5") Integer pageSize) {
+		return productService.getAllProduct(pageNo, pageSize);
+
 	}
+
 	@GetMapping("get/{id}")
 	public Optional<Product> getProduct(@PathVariable long id) {
 		return productService.getProduct(id);
 	}
+
 	@PutMapping("update")
 	public String updateProduct(@RequestBody Product product) {
 		return productService.updateProduct(product);
 	}
+
 	@DeleteMapping("delete/{id}")
 	public String deleteProduct(@PathVariable long id) {
 		return productService.deleteProduct(id);
 	}
+
 	@PostMapping("addCategory")
-	public String addCategory(@RequestBody Category category) {
-		
-		
+	public String addCategory(@RequestBody String category) {
+
 		return productService.addCategory(category);
 	}
+
 	@GetMapping("getByCategory/{categoryId}")
 	public List<Product> getByCategory(@PathVariable long categoryId) {
 		return productService.getProductByCategory(categoryId);
 	}
-	
+
 }

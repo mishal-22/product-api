@@ -14,10 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Product {
+public class Product extends BaseEntity{
  
-	@Id
-	long id;
+	
 	String name;
 	String description;
 	String img;

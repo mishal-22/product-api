@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.livares.intern.DTO.ProductDTO;
 import com.livares.intern.entity.Category;
 import com.livares.intern.entity.Product;
 import com.livares.intern.repository.CategoryRepository;
@@ -27,11 +27,21 @@ public class ProductServiceImplementation implements ProductService {
 	CategoryRepository categoryRepository;
 
 	@Override
-	public String addProduct(Product product) {
+	public String addProduct(ProductDTO productDto) {
 
-		if (productRepository.findByName(product.getName()) == null) {
+		if (productRepository.findByName(productDto.getName()) == null) {
+			Product product = new Product();
+			product.setName(productDto.getName());
+			product.setDescription(productDto.getDescription());
+			product.setImg(productDto.getImg());
+			product.setPrice(productDto.getPrice());
+			product.setQuantity(productDto.getQuantity());
 
-			Category category = categoryRepository.findById(product.getCategoryId().getId()).orElse(null);
+			Category productCategory = new Category();
+			productCategory.setCategory(productDto.getCategory());
+			product.setCategoryId(productCategory);
+
+			Category category = categoryRepository.findByCategory(productDto.getCategory()).orElse(null);
 			if (category == null) {
 				category = categoryRepository.save(product.getCategoryId());
 			}
@@ -44,11 +54,11 @@ public class ProductServiceImplementation implements ProductService {
 	}
 
 	@Override
-	public Page<Product> getAllProduct(Integer pageNo,Integer pageSize) {
-		
-		Pageable paging=PageRequest.of(pageNo, pageSize);
-		
-	return productRepository.findAll(paging);
+	public Page<ProductDTO> getAllProduct(Integer pageNo, Integer pageSize) {
+
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+
+		return productRepository.findAllCategory(paging);
 
 //		if(pagedResultPage.hasContent()) {
 //			return pagedResultPage.getContent();
@@ -56,8 +66,7 @@ public class ProductServiceImplementation implements ProductService {
 //		else {
 //			return new ArrayList<Product>();
 //		}
-		
-		
+
 	}
 
 	@Override
@@ -80,24 +89,39 @@ public class ProductServiceImplementation implements ProductService {
 	}
 
 	@Override
-	public String addCategory(Category category) {
-		categoryRepository.save(category);
+	public String addCategory(String category) {
+		Category c=new Category();
+		c.setCategory(category);
+		categoryRepository.save(c);
 		return "Category added successfully";
 	}
 
 	@Override
-	public ResponseEntity<String> addAllProducts(List<Product> products) {
-		for (Product p : products) {
+	public ResponseEntity<String> addAllProducts(List<ProductDTO> productDto) {
+		for (ProductDTO p : productDto) {
 			if (productRepository.findByName(p.getName()) == null) {
-				Category category = categoryRepository.findById(p.getCategoryId().getId()).orElse(null);
-				if (category == null) {
-					category = categoryRepository.save(p.getCategoryId());
-				}
-				p.setCategoryId(category);
-				productRepository.save(p);
+				if (productRepository.findByName(p.getName()) == null) {
+					Product product = new Product();
+					product.setName(p.getName());
+					product.setDescription(p.getDescription());
+					product.setImg(p.getImg());
+					product.setPrice(p.getPrice());
+					product.setQuantity(p.getQuantity());
+
+					Category productCategory = new Category();
+					productCategory.setCategory(p.getCategory());
+					product.setCategoryId(productCategory);
+
+					Category category = categoryRepository.findByCategory(p.getCategory()).orElse(null);
+					if (category == null) {
+						category = categoryRepository.save(product.getCategoryId());
+					}
+					product.setCategoryId(category);
+					productRepository.save(product);
 			}
 
-		}
+			}
+	}
 		return new ResponseEntity<>("Products added successfully", HttpStatus.OK);
 	}
 

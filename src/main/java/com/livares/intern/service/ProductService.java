@@ -6,14 +6,15 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import com.livares.intern.DTO.ProductDTO;
 import com.livares.intern.entity.Category;
 import com.livares.intern.entity.Product;
 
 public interface ProductService {
 
-	String addProduct(Product product);
+	String addProduct(ProductDTO product);
 
-	Page<Product> getAllProduct(Integer pageNo,Integer pageSize);
+	Page<ProductDTO> getAllProduct(Integer pageNo,Integer pageSize);
 
 	String updateProduct(Product product);
 
@@ -21,9 +22,9 @@ public interface ProductService {
 
 	Optional<Product> getProduct(long id);
 
-	String addCategory(Category category);
+	String addCategory(String category);
 
-	ResponseEntity<String> addAllProducts(List<Product> products);
+	ResponseEntity<String> addAllProducts(List<ProductDTO> products);
 
 	List<Product> getProductByCategory(long categoryId);
 
