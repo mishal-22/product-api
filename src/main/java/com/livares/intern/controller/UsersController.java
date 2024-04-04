@@ -3,16 +3,18 @@ package com.livares.intern.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.livares.intern.DTO.UserDTO;
-import com.livares.intern.entity.Users;
+import com.livares.intern.DTO.UserFetchDTO;
+import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.UsersService;
 
 @RestController
@@ -27,9 +29,10 @@ public class UsersController {
 //	private AuthenticationManager authenticationManager;
 
 	@PostMapping("/register")
-	public String addUser(@RequestBody UserDTO user) {
+	public ResponseEntity<Object> addUser(@RequestBody UserDTO user) {
 
-		return usersService.addUser(user);
+		String response = usersService.addUser(user);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, user);
 	}
 //	@PostMapping("login")
 //	public String loginPage(@RequestParam String userName,@RequestParam String password) {
@@ -37,13 +40,15 @@ public class UsersController {
 //	}
 
 	@GetMapping("get-all-users")
-	public List<Users> getAllUsers() {
-		return usersService.getAllUsers();
+	public ResponseEntity<Object> getAllUsers() {
+		List<UserFetchDTO> userDTOs = usersService.getAllUsers();
+		return ResponseHandler.generateResponse("Users", HttpStatus.OK, userDTOs);
 	}
 
 	@DeleteMapping("delete-user/{id}")
-	public String deleteUser(@PathVariable long id) {
-		return usersService.deleteUser(id);
+	public ResponseEntity<Object> deleteUser(@PathVariable long id) {
+		String response = usersService.deleteUser(id);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, id);
 	}
 
 //	@PostMapping("add-admin")

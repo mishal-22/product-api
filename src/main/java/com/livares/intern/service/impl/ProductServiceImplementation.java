@@ -1,7 +1,6 @@
 package com.livares.intern.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,8 +13,11 @@ import org.springframework.stereotype.Service;
 import com.livares.intern.DTO.ProductDTO;
 import com.livares.intern.entity.Category;
 import com.livares.intern.entity.Product;
+import com.livares.intern.exception.CustomException;
+import com.livares.intern.exception.ErrorCodes;
 import com.livares.intern.repository.CategoryRepository;
 import com.livares.intern.repository.ProductRepository;
+import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.ProductService;
 
 @Service
@@ -47,9 +49,9 @@ public class ProductServiceImplementation implements ProductService {
 			}
 			product.setCategoryId(category);
 			productRepository.save(product);
-			return "Product added successfully";
+			return "Product successfully added";
 		} else {
-			return "Product alredy exist";
+			throw new CustomException(ErrorCodes.BAD_REQUEST, "Product alredy exist");
 		}
 	}
 
@@ -57,8 +59,16 @@ public class ProductServiceImplementation implements ProductService {
 	public Page<ProductDTO> getAllProduct(Integer pageNo, Integer pageSize) {
 
 		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<ProductDTO> productPage= productRepository.findAllCategory(paging);
+		if(productPage!=null) {
+			
+			return productPage;
+			}
+			else {
+				throw new CustomException(ErrorCodes.NOT_FOUND, "Products doesn't exist");
+			}
 
-		return productRepository.findAllCategory(paging);
+		
 
 //		if(pagedResultPage.hasContent()) {
 //			return pagedResultPage.getContent();
@@ -70,34 +80,49 @@ public class ProductServiceImplementation implements ProductService {
 	}
 
 	@Override
-	public String updateProduct(Product product) {
-		productRepository.save(product);
-		return "Product succesfully updated";
+	public String updateProduct(ProductDTO product) {
+		Product dbProduct = productRepository.findByName(product.getName());
+		dbProduct.setDescription(product.getDescription());
+		dbProduct.setImg(product.getImg());
+		dbProduct.setPrice(product.getPrice());
+		dbProduct.setQuantity(product.getQuantity());
+		productRepository.save(dbProduct);
+		return "Product Updated successfully";
 	}
 
 	@Override
 	public String deleteProduct(long id) {
 
 		productRepository.deleteById(id);
-		return "Product with id " + id + " is deleted successfully";
+		return "Deleted successfully";
+				
 	}
 
 	@Override
-	public Optional<Product> getProduct(long id) {
+	public ProductDTO getProduct(String name) {
 
-		return productRepository.findById(id);
+		
+		return productRepository.getProductByName(name);
+				
 	}
 
 	@Override
 	public String addCategory(String category) {
-		Category c=new Category();
-		c.setCategory(category);
-		categoryRepository.save(c);
-		return "Category added successfully";
+		Category c = categoryRepository.findByCategory(category).orElse(null);
+		if (c == null) {
+			c = new Category();
+			c.setCategory(category);
+			categoryRepository.save(c);
+			return "Category added successfully";
+					
+		} else {
+			throw new CustomException(ErrorCodes.BAD_REQUEST, "Category already exist");
+		}
+
 	}
 
 	@Override
-	public ResponseEntity<String> addAllProducts(List<ProductDTO> productDto) {
+	public String addAllProducts(List<ProductDTO> productDto) {
 		for (ProductDTO p : productDto) {
 			if (productRepository.findByName(p.getName()) == null) {
 				if (productRepository.findByName(p.getName()) == null) {
@@ -118,17 +143,19 @@ public class ProductServiceImplementation implements ProductService {
 					}
 					product.setCategoryId(category);
 					productRepository.save(product);
-			}
+				}
 
 			}
-	}
-		return new ResponseEntity<>("Products added successfully", HttpStatus.OK);
+		}
+		return "Products added successfully";
+		
 	}
 
 	@Override
-	public List<Product> getProductByCategory(long categoryId) {
+	public List<ProductDTO> getProductByCategory(String category) {
 
-		return productRepository.findByCategoryId(categoryId);
+		return productRepository.findByCategoryName(category);
+				
 	}
 
 }

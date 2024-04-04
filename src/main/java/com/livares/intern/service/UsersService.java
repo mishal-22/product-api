@@ -2,18 +2,20 @@ package com.livares.intern.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.livares.intern.DTO.UserDTO;
-import com.livares.intern.entity.Users;
+import com.livares.intern.DTO.UserFetchDTO;
 
 public interface UsersService {
 
 	String addUser(UserDTO user);
 
-	List<Users> getAllUsers();
+	List<UserFetchDTO> getAllUsers();
 
 	String deleteUser(long id);
 
-	String addAdmin(Users users);
+//	ResponseEntity< String> addAdmin(Users users);
 
 //	String login(String userName, String password);
 

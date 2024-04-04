@@ -1,10 +1,10 @@
 package com.livares.intern.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.livares.intern.DTO.ProductDTO;
-import com.livares.intern.entity.Category;
-import com.livares.intern.entity.Product;
+import com.livares.intern.exception.CustomException;
+import com.livares.intern.exception.ErrorCodes;
+import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.ProductService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,46 +33,56 @@ public class ProductController {
 	ProductService productService;
 
 	@PostMapping("/add")
-	public String addProduct(@RequestBody ProductDTO product) {
-		return productService.addProduct(product);
+	public ResponseEntity<Object> addProduct(@RequestBody ProductDTO product) {
+		String response= productService.addProduct(product);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, product);
 	}
 
 	@PostMapping("/addItems")
-	public ResponseEntity<String> addMultipleProducts(@RequestBody List<ProductDTO> products) {
-		return productService.addAllProducts(products);
+	public ResponseEntity<Object> addMultipleProducts(@RequestBody List<ProductDTO> products) {
+		String response= productService.addAllProducts(products);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, products); 
 	}
 
 	@GetMapping("/getAll")
-	public Page<ProductDTO> getAllProduct(@RequestParam(defaultValue = "0") Integer pageNo,
+	public ResponseEntity<Object> getAllProduct(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "5") Integer pageSize) {
-		return productService.getAllProduct(pageNo, pageSize);
+		Page<ProductDTO> productPage=productService.getAllProduct(pageNo, pageSize);
+			
+		return ResponseHandler.generateResponse("Products", HttpStatus.OK,productPage);
+		
 
 	}
 
-	@GetMapping("get/{id}")
-	public Optional<Product> getProduct(@PathVariable long id) {
-		return productService.getProduct(id);
+	@GetMapping("get/{name}")
+	public ResponseEntity<Object> getProduct(@PathVariable String name) {
+	ProductDTO productDTO=productService.getProduct(name);
+		return ResponseHandler.generateResponse("Product", HttpStatus.OK,productDTO );
 	}
 
 	@PutMapping("update")
-	public String updateProduct(@RequestBody Product product) {
-		return productService.updateProduct(product);
+	public ResponseEntity<Object> updateProduct(@RequestBody ProductDTO product) {
+		String response= productService.updateProduct(product);
+		 return ResponseHandler.generateResponse(response, HttpStatus.OK, product);
 	}
 
 	@DeleteMapping("delete/{id}")
-	public String deleteProduct(@PathVariable long id) {
-		return productService.deleteProduct(id);
+	public ResponseEntity<Object> deleteProduct(@PathVariable long id) {
+	 String response=productService.deleteProduct(id);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, id);
 	}
 
 	@PostMapping("addCategory")
-	public String addCategory(@RequestBody String category) {
+	public ResponseEntity<Object> addCategory(@RequestBody String category) {
 
-		return productService.addCategory(category);
+		String response=productService.addCategory(category);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, category);
 	}
 
-	@GetMapping("getByCategory/{categoryId}")
-	public List<Product> getByCategory(@PathVariable long categoryId) {
-		return productService.getProductByCategory(categoryId);
+	@GetMapping("getByCategory/{category}")
+	public ResponseEntity<Object> getByCategory(@PathVariable String category) {
+		List<ProductDTO> productDTO= productService.getProductByCategory(category);
+		return ResponseHandler.generateResponse("Products by category", HttpStatus.OK,productDTO);
 	}
 
 }

@@ -2,6 +2,8 @@ package com.livares.intern.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.livares.intern.DTO.CartDTO;
 
 public interface CartService {
@@ -10,6 +12,6 @@ public interface CartService {
 
 	List<CartDTO> fetchDetails(long userId);
 
-//	String delete(long userId);
+	String deleteUser(long userId,long productId);
 
 }

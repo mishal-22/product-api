@@ -1,7 +1,6 @@
 package com.livares.intern.DTO;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class UserDTO {
