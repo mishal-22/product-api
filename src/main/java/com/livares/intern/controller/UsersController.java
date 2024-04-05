@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class UsersController {
 //	@Autowired
 //	private AuthenticationManager authenticationManager;
 
-	@PostMapping("/register")
+	@PostMapping("/register/user")
 	public ResponseEntity<Object> addUser(@RequestBody UserDTO user) {
 
 		String response = usersService.addUser(user);
@@ -54,16 +55,16 @@ public class UsersController {
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, id);
 	}
 
-//	@GetMapping("user/userProfile")
-//	@PreAuthorize("hasAuthority('ROLE_USER')")
-//	public String userProfile() {
-//	   return "Welcome to user profile";	
-//	}
-//	@GetMapping("admin/adminProfile")
-//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//	public String adminProfile() {
-//	   return "Welcome to admin profile";	
-//	}
+	@GetMapping("user/userProfile")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
+	public String userProfile() {
+	   return "Welcome to user profile";	
+	}
+	@GetMapping("admin/adminProfile")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	public String adminProfile() {
+	   return "Welcome to admin profile";	
+	}
 //	
 //	@PostMapping("generateToken")
 //	public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {

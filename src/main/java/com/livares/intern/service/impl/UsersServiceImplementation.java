@@ -36,6 +36,7 @@ public class UsersServiceImplementation implements UsersService {
 				newUser.setLastName(user.getLastName());
 				newUser.setUsername(user.getUsername());
 				newUser.setPassword(user.getPassword());
+				newUser.setRole(user.getRole());
 				usersRepository.save(newUser);
 				return "User added successfully";
 
