@@ -13,9 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Product extends BaseEntity{
- 
-	
+public class Product extends BaseEntity {
+
 	String name;
 	String description;
 	String img;
@@ -25,6 +24,4 @@ public class Product extends BaseEntity{
 	Category categoryId;
 	int quantity;
 
-	
-	
 }

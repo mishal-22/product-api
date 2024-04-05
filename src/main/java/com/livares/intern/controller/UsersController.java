@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.livares.intern.DTO.UserDTO;
@@ -34,10 +35,12 @@ public class UsersController {
 		String response = usersService.addUser(user);
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, user);
 	}
-//	@PostMapping("login")
-//	public String loginPage(@RequestParam String userName,@RequestParam String password) {
-//		return usersService.login(userName,password);
-//	}
+
+	@PostMapping("login")
+	public ResponseEntity<Object> loginPage(@RequestParam String userName, @RequestParam String password) {
+		String response = usersService.login(userName, password);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, userName);
+	}
 
 	@GetMapping("get-all-users")
 	public ResponseEntity<Object> getAllUsers() {
@@ -50,13 +53,6 @@ public class UsersController {
 		String response = usersService.deleteUser(id);
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, id);
 	}
-
-//	@PostMapping("add-admin")
-//	public String addAdmin(@RequestBody Users users) {
-//		
-//		
-//		return usersService.addAdmin(users) ;
-//	}
 
 //	@GetMapping("user/userProfile")
 //	@PreAuthorize("hasAuthority('ROLE_USER')")

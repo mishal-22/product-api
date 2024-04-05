@@ -14,7 +14,7 @@ import com.livares.intern.entity.Users;
 public interface UsersRepository extends JpaRepository<Users, Long> {
 
 	Optional<Users> findByUsername(String username);
-	
+
 	@Query("select new com.livares.intern.DTO.UserFetchDTO(id,firstName,lastName,username) from Users")
 	List<UserFetchDTO> findAllUsers();
 }

@@ -3,7 +3,6 @@ package com.livares.intern.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -18,18 +17,14 @@ public interface UserProductCartRepository extends JpaRepository<UserProductCart
 	List<CartDTO> fetchData(long userId);
 
 	@Query("select count(c) from UserProductCart c where c.productId.id=:productId and c.userId.id=:userId ")
-	int countOfProducts(long userId,long productId);
+	int countOfProducts(long userId, long productId);
 
-	
-
-	
 //
-	
-	@Query("select id from UserProductCart u where u.userId.id=:userId and u.productId.id=:productId ")
-	long getCartById(long userId,long productId);
-	
+
 	@Query("select count(c) from UserProductCart c where c.userId.id=:userId")
 	int countByUserId(long userId);
 
-	
+	@Query("select c from UserProductCart c where c.userId.id=:userId and c.productId.id=:productId")
+	UserProductCart findByUserId(long userId, long productId);
+
 }

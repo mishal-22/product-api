@@ -2,8 +2,6 @@ package com.livares.intern.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
 import com.livares.intern.DTO.CartDTO;
 
 public interface CartService {

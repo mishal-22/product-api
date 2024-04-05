@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.livares.intern.DTO.ProductDTO;
-import com.livares.intern.exception.CustomException;
-import com.livares.intern.exception.ErrorCodes;
 import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.ProductService;
 
@@ -34,55 +32,54 @@ public class ProductController {
 
 	@PostMapping("/add")
 	public ResponseEntity<Object> addProduct(@RequestBody ProductDTO product) {
-		String response= productService.addProduct(product);
+		String response = productService.addProduct(product);
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, product);
 	}
 
 	@PostMapping("/addItems")
 	public ResponseEntity<Object> addMultipleProducts(@RequestBody List<ProductDTO> products) {
-		String response= productService.addAllProducts(products);
-		return ResponseHandler.generateResponse(response, HttpStatus.OK, products); 
+		String response = productService.addAllProducts(products);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, products);
 	}
 
 	@GetMapping("/getAll")
 	public ResponseEntity<Object> getAllProduct(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "5") Integer pageSize) {
-		Page<ProductDTO> productPage=productService.getAllProduct(pageNo, pageSize);
-			
-		return ResponseHandler.generateResponse("Products", HttpStatus.OK,productPage);
-		
+		Page<ProductDTO> productPage = productService.getAllProduct(pageNo, pageSize);
+
+		return ResponseHandler.generateResponse("Products", HttpStatus.OK, productPage);
 
 	}
 
 	@GetMapping("get/{name}")
 	public ResponseEntity<Object> getProduct(@PathVariable String name) {
-	ProductDTO productDTO=productService.getProduct(name);
-		return ResponseHandler.generateResponse("Product", HttpStatus.OK,productDTO );
+		ProductDTO productDTO = productService.getProduct(name);
+		return ResponseHandler.generateResponse("Product", HttpStatus.OK, productDTO);
 	}
 
 	@PutMapping("update")
 	public ResponseEntity<Object> updateProduct(@RequestBody ProductDTO product) {
-		String response= productService.updateProduct(product);
-		 return ResponseHandler.generateResponse(response, HttpStatus.OK, product);
+		String response = productService.updateProduct(product);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, product);
 	}
 
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<Object> deleteProduct(@PathVariable long id) {
-	 String response=productService.deleteProduct(id);
+		String response = productService.deleteProduct(id);
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, id);
 	}
 
 	@PostMapping("addCategory")
 	public ResponseEntity<Object> addCategory(@RequestBody String category) {
 
-		String response=productService.addCategory(category);
+		String response = productService.addCategory(category);
 		return ResponseHandler.generateResponse(response, HttpStatus.OK, category);
 	}
 
 	@GetMapping("getByCategory/{category}")
 	public ResponseEntity<Object> getByCategory(@PathVariable String category) {
-		List<ProductDTO> productDTO= productService.getProductByCategory(category);
-		return ResponseHandler.generateResponse("Products by category", HttpStatus.OK,productDTO);
+		List<ProductDTO> productDTO = productService.getProductByCategory(category);
+		return ResponseHandler.generateResponse("Products by category", HttpStatus.OK, productDTO);
 	}
 
 }

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users extends BaseEntity  {
-	
+public class Users extends BaseEntity {
+
 	String firstName;
 	String lastName;
-     String username;
-     String password;
-     
+	String username;
+	String password;
+
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +37,7 @@ public class CartController {
 	@DeleteMapping("delete")
 	public ResponseEntity<Object> deleteFromCart(@RequestParam long userId, @RequestParam long productId) {
 
-	String response=	cartService.deleteUser(userId, productId);
-		return ResponseHandler.generateResponse(response, HttpStatus.OK, userId); 
+		String response = cartService.deleteUser(userId, productId);
+		return ResponseHandler.generateResponse(response, HttpStatus.OK, userId);
 	}
 }

@@ -10,12 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDTO {
-     
+
 	String name;
 	String description;
 	String img;
 	float price;
 	String categoryName;
 	String userName;
-	
+
 }

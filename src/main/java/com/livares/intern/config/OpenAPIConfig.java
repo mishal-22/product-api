@@ -17,35 +17,32 @@ public class OpenAPIConfig {
 
 	@Value("${liavres.openapi.dev-url}")
 	private String devUrl;
-	
-	 @Value("${livares.openapi.prod-url}")
-	  private String prodUrl;
-	 
-	 @Bean
-	 public OpenAPI myOpenAPI() {
-		 Server devServer=new Server();
-		 devServer.setUrl(devUrl);
-		 devServer.setDescription("Server URL in Development environment");
 
-		    Server prodServer = new Server();
-		    prodServer.setUrl(prodUrl);
-		    prodServer.setDescription("Server URL in Production environment");
+	@Value("${livares.openapi.prod-url}")
+	private String prodUrl;
 
-		    Contact contact = new Contact();
-		    contact.setEmail("mishal123@gmail.com");
-		    contact.setName("Mishal k");
-		    contact.setUrl("https://www.mishal123.com");
+	@Bean
+	public OpenAPI myOpenAPI() {
+		Server devServer = new Server();
+		devServer.setUrl(devUrl);
+		devServer.setDescription("Server URL in Development environment");
 
-		    License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+		Server prodServer = new Server();
+		prodServer.setUrl(prodUrl);
+		prodServer.setDescription("Server URL in Production environment");
 
-		    Info info = new Info()
-		        .title("Product API")
-		        .version("1.0")
-		        .contact(contact)
-		        .description("This API exposes endpoints to products.").termsOfService("https://www.livares.com/terms")
-		        .license(mitLicense);
+		Contact contact = new Contact();
+		contact.setEmail("mishal123@gmail.com");
+		contact.setName("Mishal k");
+		contact.setUrl("https://www.mishal123.com");
 
-		    return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
-		  
-	 }
+		License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+
+		Info info = new Info().title("Product API").version("1.0").contact(contact)
+				.description("This API exposes endpoints to products.").termsOfService("https://www.livares.com/terms")
+				.license(mitLicense);
+
+		return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
+
+	}
 }

@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProductCart extends BaseEntity {
-	
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")

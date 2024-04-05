@@ -17,7 +17,6 @@ public class BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private LocalDateTime createDateTime=LocalDateTime.now();
-	
-	
+	private LocalDateTime createDateTime = LocalDateTime.now();
+
 }

@@ -3,8 +3,6 @@ package com.livares.intern.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,6 @@ import com.livares.intern.entity.Users;
 import com.livares.intern.exception.CustomException;
 import com.livares.intern.exception.ErrorCodes;
 import com.livares.intern.repository.UsersRepository;
-import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.UsersService;
 
 @Service
@@ -41,7 +38,7 @@ public class UsersServiceImplementation implements UsersService {
 				newUser.setPassword(user.getPassword());
 				usersRepository.save(newUser);
 				return "User added successfully";
-						
+
 			} else {
 				throw new CustomException(ErrorCodes.BAD_REQUEST, "User alredy exist");
 			}
@@ -54,27 +51,44 @@ public class UsersServiceImplementation implements UsersService {
 	@Override
 	public List<UserFetchDTO> getAllUsers() {
 
-		return usersRepository.findAllUsers();
-				
+		List<UserFetchDTO> userFetchDTOs = usersRepository.findAllUsers();
+		if (userFetchDTOs.isEmpty()) {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Users does not exist");
+		} else {
+
+			return userFetchDTOs;
+		}
+
 	}
 
 	@Override
 	public String deleteUser(long id) {
-		usersRepository.deleteById(id);
-		return "User deleted successfully";
-				
+		Users user = usersRepository.findById(id).orElse(null);
+		if (user != null) {
+
+			usersRepository.deleteById(id);
+			return "User deleted successfully";
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "User is not found!");
+		}
+
 	}
 
-//	@Override
-//	public ResponseEntity< String> addAdmin(Users users) {
-//		usersRepository.save(users);
-//		return  "Admin user added successfully";
-//	}
+	@Override
+	public String login(String userName, String password) {
+		Users users = usersRepository.findByUsername(userName).orElse(null);
+		if (users == null) {
+			return "User doesn't exist";
+		} else {
 
-//	@Override
-//	public String login(String userName, String password) {
-//
-//		return null;
-//	}
+			String db_password = users.getPassword();
+			if (db_password.equals(password)) {
+				return "Login Successfully Completed";
+			} else {
+				return "Invalid userName or Password";
+			}
+		}
+
+	}
 
 }

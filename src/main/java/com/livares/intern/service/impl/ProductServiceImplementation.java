@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.livares.intern.DTO.ProductDTO;
@@ -17,7 +15,6 @@ import com.livares.intern.exception.CustomException;
 import com.livares.intern.exception.ErrorCodes;
 import com.livares.intern.repository.CategoryRepository;
 import com.livares.intern.repository.ProductRepository;
-import com.livares.intern.response.ResponseHandler;
 import com.livares.intern.service.ProductService;
 
 @Service
@@ -59,16 +56,13 @@ public class ProductServiceImplementation implements ProductService {
 	public Page<ProductDTO> getAllProduct(Integer pageNo, Integer pageSize) {
 
 		Pageable paging = PageRequest.of(pageNo, pageSize);
-		Page<ProductDTO> productPage= productRepository.findAllCategory(paging);
-		if(productPage!=null) {
-			
-			return productPage;
-			}
-			else {
-				throw new CustomException(ErrorCodes.NOT_FOUND, "Products doesn't exist");
-			}
+		Page<ProductDTO> productPage = productRepository.findAllCategory(paging);
+		if (productPage != null) {
 
-		
+			return productPage;
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Products doesn't exist");
+		}
 
 //		if(pagedResultPage.hasContent()) {
 //			return pagedResultPage.getContent();
@@ -82,28 +76,43 @@ public class ProductServiceImplementation implements ProductService {
 	@Override
 	public String updateProduct(ProductDTO product) {
 		Product dbProduct = productRepository.findByName(product.getName());
-		dbProduct.setDescription(product.getDescription());
-		dbProduct.setImg(product.getImg());
-		dbProduct.setPrice(product.getPrice());
-		dbProduct.setQuantity(product.getQuantity());
-		productRepository.save(dbProduct);
-		return "Product Updated successfully";
+		if (dbProduct != null) {
+
+			dbProduct.setDescription(product.getDescription());
+			dbProduct.setImg(product.getImg());
+			dbProduct.setPrice(product.getPrice());
+			dbProduct.setQuantity(product.getQuantity());
+			productRepository.save(dbProduct);
+			return "Product Updated successfully";
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Product not found");
+		}
 	}
 
 	@Override
 	public String deleteProduct(long id) {
+		Product product = productRepository.findById(id).orElse(null);
+		if (product != null) {
 
-		productRepository.deleteById(id);
-		return "Deleted successfully";
-				
+			productRepository.deleteById(id);
+			return "Deleted successfully";
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Product not found");
+		}
+
 	}
 
 	@Override
 	public ProductDTO getProduct(String name) {
 
-		
-		return productRepository.getProductByName(name);
-				
+		ProductDTO productDTO = productRepository.getProductByName(name);
+		if (productDTO != null) {
+
+			return productDTO;
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Product not found!");
+		}
+
 	}
 
 	@Override
@@ -114,7 +123,7 @@ public class ProductServiceImplementation implements ProductService {
 			c.setCategory(category);
 			categoryRepository.save(c);
 			return "Category added successfully";
-					
+
 		} else {
 			throw new CustomException(ErrorCodes.BAD_REQUEST, "Category already exist");
 		}
@@ -124,38 +133,43 @@ public class ProductServiceImplementation implements ProductService {
 	@Override
 	public String addAllProducts(List<ProductDTO> productDto) {
 		for (ProductDTO p : productDto) {
+
 			if (productRepository.findByName(p.getName()) == null) {
-				if (productRepository.findByName(p.getName()) == null) {
-					Product product = new Product();
-					product.setName(p.getName());
-					product.setDescription(p.getDescription());
-					product.setImg(p.getImg());
-					product.setPrice(p.getPrice());
-					product.setQuantity(p.getQuantity());
+				Product product = new Product();
+				product.setName(p.getName());
+				product.setDescription(p.getDescription());
+				product.setImg(p.getImg());
+				product.setPrice(p.getPrice());
+				product.setQuantity(p.getQuantity());
 
-					Category productCategory = new Category();
-					productCategory.setCategory(p.getCategory());
-					product.setCategoryId(productCategory);
+				Category productCategory = new Category();
+				productCategory.setCategory(p.getCategory());
+				product.setCategoryId(productCategory);
 
-					Category category = categoryRepository.findByCategory(p.getCategory()).orElse(null);
-					if (category == null) {
-						category = categoryRepository.save(product.getCategoryId());
-					}
-					product.setCategoryId(category);
-					productRepository.save(product);
+				Category category = categoryRepository.findByCategory(p.getCategory()).orElse(null);
+				if (category == null) {
+					category = categoryRepository.save(product.getCategoryId());
 				}
-
+				product.setCategoryId(category);
+				productRepository.save(product);
 			}
+
 		}
+
 		return "Products added successfully";
-		
+
 	}
 
 	@Override
 	public List<ProductDTO> getProductByCategory(String category) {
+		List<ProductDTO> productDTO = productRepository.findByCategoryName(category);
+		if (productDTO != null) {
 
-		return productRepository.findByCategoryName(category);
-				
+			return productDTO;
+		} else {
+			throw new CustomException(ErrorCodes.NOT_FOUND, "Product not fond with the category");
+		}
+
 	}
 
 }

@@ -12,10 +12,11 @@ public class CustomResponse {
 	String message;
 	int status;
 	Object responseObj;
+
 	public CustomResponse(String message, int status) {
 		super();
 		this.message = message;
 		this.status = status;
 	}
-	
+
 }
