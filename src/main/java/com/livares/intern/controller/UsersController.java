@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.livares.intern.DTO.LoginResponse;
 import com.livares.intern.DTO.UserDTO;
 import com.livares.intern.DTO.UserFetchDTO;
+import com.livares.intern.DTO.UsersLoginDto;
+import com.livares.intern.entity.Users;
 import com.livares.intern.response.ResponseHandler;
+import com.livares.intern.service.AuthenticationService;
+import com.livares.intern.service.JwtService;
 import com.livares.intern.service.UsersService;
 
 @RestController
@@ -24,11 +29,11 @@ public class UsersController {
 	@Autowired
 	UsersService usersService;
 
-//	@Autowired
-//	private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
-//	@Autowired
-//	private AuthenticationManager authenticationManager;
+	@Autowired
+	private AuthenticationService authenticationService;
 
 	@PostMapping("/register/user")
 	public ResponseEntity<Object> addUser(@RequestBody UserDTO user) {
@@ -38,9 +43,13 @@ public class UsersController {
 	}
 
 	@PostMapping("login")
-	public ResponseEntity<Object> loginPage(@RequestParam String userName, @RequestParam String password) {
-		String response = usersService.login(userName, password);
-		return ResponseHandler.generateResponse(response, HttpStatus.OK, userName);
+	public ResponseEntity<Object> loginPage(@RequestBody UsersLoginDto loginDto) {
+		Users authenticatedUser = authenticationService.authenticate(loginDto);
+
+        String jwtToken = jwtService.generateToken(authenticatedUser);
+
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+		return ResponseHandler.generateResponse("Success", HttpStatus.OK, loginResponse);
 	}
 
 	@GetMapping("get-all-users")
